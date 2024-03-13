@@ -6,18 +6,48 @@ function App() {
   const [loanAmount, setLoanAmount] = useState(1200000);
   const handleLoanChange = (event:any) => {
     setLoanAmount(event.target.value);    
+    handleAnyChange()
   }
 
   const [interestPercent, setInterestPercent] = useState(5.5);
   const handleInterestChange = (event:any) => {
     setInterestPercent(event.target.value);
+    handleAnyChange();
   }
 
   const [repaymentYears, setRepaymentYears] = useState(25);
   const handleRepaymentChange = (event:any) => {
     setRepaymentYears(event.target.value);
+    handleAnyChange();
   }
 
+
+  const [annuityData, setAnnuityData] = useState([{year:0, payment:0, together:0}]);
+  const [serialData, setSerialData] = useState([]);
+  const handleAnyChange = () => {
+    //calculate annuity data
+    setAnnuityData([{year:0, payment:0, together:0}]);
+
+    let sum = loanAmount;
+    let rente = interestPercent / 100;
+    let nedbetalingstid = repaymentYears;
+
+    let tilsammen = 0;
+    let restlån = sum;
+    for (let x = 1; x < nedbetalingstid + 1; x++) {
+      let rentebeløp = restlån * rente;
+      let avdrag = sum / nedbetalingstid;
+      let terminbeløp = rentebeløp + avdrag;
+      tilsammen += terminbeløp;
+      restlån -= avdrag;
+
+      annuityData.push({year:x, payment:terminbeløp, together:tilsammen})
+      console.log(annuityData);
+      
+    }
+
+    //calculate serial data
+  }
 
   return (
     <div className="App">
